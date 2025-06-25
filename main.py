@@ -54,7 +54,6 @@ except FileNotFoundError:
 # Mendefinisikan variabel
 Y = df_sample['GPA']
 X = df_sample[['Study_Hours_per_Week', 'Attendance_Rate']]
-# jadi kita TIDAK perlu menggunakan sm.add_constant(X) untuk model utama.
 
 # --- 2. MEMBUAT TABEL STATISTIK DESKRIPTIF ---
 print("--- Tabel 1: Statistik Deskriptif ---")
@@ -90,12 +89,10 @@ print(f"R-squared                  : {r_squared:.4f}")
 print("\n--- Hasil Uji Prasyarat/Asumsi ---")
 
 # --- 2. MEMBUAT MODEL DENGAN SCIKIT-LEARN ---
-# Scikit-learn secara otomatis menangani konstanta (intercept)
 model = LinearRegression()
 model.fit(X, Y)
 
 # --- 3. PERHITUNGAN MANUAL UNTUK STATISTIK REGRESI ---
-# Menambahkan konstanta ke X secara manual untuk perhitungan matriks
 X_with_const = np.c_[np.ones(X.shape[0]), X]
 
 # Menghitung prediksi dan residual
@@ -103,8 +100,8 @@ y_pred = model.predict(X)
 residuals = Y - y_pred
 
 # Menghitung parameter dasar
-n = len(Y)  # Jumlah observasi
-k = X.shape[1] # Jumlah variabel independen
+n = len(Y)  
+k = X.shape[1] 
 dof_residuals = n - k - 1
 
 # Menghitung R-squared dan Adjusted R-squared
@@ -118,7 +115,6 @@ s_squared = ss_residuals / dof_residuals
 s = np.sqrt(s_squared)
 
 # Menghitung Standard Error, t-statistic, dan p-value untuk setiap koefisien
-# Ini adalah bagian yang paling rumit, menggunakan aljabar linear
 xtx_inv = np.linalg.inv(X_with_const.T @ X_with_const)
 se_coeffs = np.sqrt(np.diag(xtx_inv) * s_squared)
 
@@ -184,10 +180,9 @@ else:
     print("   - Kesimpulan: Prob(JB) < 0.05, residual TIDAK terdistribusi normal.")
 
 # 3. Uji Multikolinearitas (Variance Inflation Factor - VIF)
-# Untuk VIF, perlu menambahkan konstanta secara manual ke data X
 X_vif = pd.DataFrame(np.c_[np.ones(X.shape[0]), X], columns=['const'] + list(X.columns))
 vif_data = pd.DataFrame()
-vif_data["feature"] = X_vif.columns[1:] # Hanya tampilkan variabel independen
+vif_data["feature"] = X_vif.columns[1:] 
 vif_data["VIF"] = [variance_inflation_factor(X_vif.values, i) for i in range(1, X_vif.shape[1])]
 print("\n3. Uji Multikolinearitas (Variance Inflation Factor - VIF):")
 print(vif_data)
