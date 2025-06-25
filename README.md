@@ -54,7 +54,7 @@ Untuk mereplikasi hasil analisis, ikuti langkah-langkah berikut:
 
 4.  **Jalankan skrip analisis:**
     ```bash
-    python analisis_data.py
+    python main.py
     ```
     Skrip akan mencetak semua hasil tabel analisis di terminal dan menyimpan plot visualisasi di dalam folder `/visualisasi/`.
 
